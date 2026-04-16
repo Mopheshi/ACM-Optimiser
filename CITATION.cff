@@ -1,0 +1,32 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: "Edward"
+    given-names: "Ndachimya Magaji"
+    affiliation: "Istanbul Okan University"
+  - family-names: "Daniel"
+    given-names: "Jibrailu"
+    affiliation: "Istanbul Okan University"
+  - family-names: "Dauda"
+    given-names: "Yohanna"
+    affiliation: "Istanbul Okan University"
+title: "Adaptive Circular Manifold (ACM) Optimiser"
+version: 1.0.0
+date-released: 2026-05-21
+url: "https://github.com/Mopheshi/ACM-Optimiser"
+preferred-citation:
+  type: conference-paper
+  title: "Adaptive Circular Manifold (ACM): A Density-Dependent Geometric Metric for Robust Gradient Descent"
+  authors:
+    - family-names: "Edward"
+      given-names: "Ndachimya Magaji"
+    - family-names: "Daniel"
+      given-names: "Jibrailu"
+    - family-names: "Dauda"
+      given-names: "Yohanna"
+  collection-title: "8th International Congress on Human-Computer Interaction, Optimization and Robotic Applications (ICHORA)"
+  year: 2026
+  conference:
+    name: "ICHORA 2026"
+    city: "Ankara"
+    country: "Türkiye"
