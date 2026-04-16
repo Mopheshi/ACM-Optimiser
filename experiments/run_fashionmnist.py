@@ -1,5 +1,6 @@
 import os
 import sys
+
 # Add project root to sys.path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
@@ -16,6 +17,7 @@ from experiments.utils import train_and_evaluate, set_seed
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
+
 class SimpleCNN(nn.Module):
     def __init__(self):
         super(SimpleCNN, self).__init__()
@@ -30,6 +32,7 @@ class SimpleCNN(nn.Module):
         x = x.view(-1, 32 * 7 * 7)
         x = F.relu(self.fc1(x))
         return self.fc2(x)
+
 
 def main():
     set_seed(42)
@@ -54,17 +57,20 @@ def main():
     print("\nTraining with Adam...")
     model_adam = SimpleCNN().to(device)
     opt_adam = torch.optim.Adam(model_adam.parameters(), lr=0.001)
-    _, _, _, hist_adam = train_and_evaluate(model_adam, train_loader, test_loader, criterion, opt_adam, epochs=30, patience=30)
+    _, _, _, hist_adam = train_and_evaluate(model_adam, train_loader, test_loader, criterion, opt_adam, epochs=30,
+                                            patience=30)
 
     print("\nTraining with ACM...")
     model_acm = SimpleCNN().to(device)
     opt_acm = ACM(model_acm.parameters(), lr=0.01, kappa=1.0)
-    _, _, _, hist_acm = train_and_evaluate(model_acm, train_loader, test_loader, criterion, opt_acm, epochs=30, patience=30)
+    _, _, _, hist_acm = train_and_evaluate(model_acm, train_loader, test_loader, criterion, opt_acm, epochs=30,
+                                           patience=30)
 
     # Plotting the results for the paper
     plt.figure(figsize=(10, 6))
     plt.plot(range(1, 31), hist_adam['val_acc'], label='Adam', color='cyan', linewidth=2, marker='o')
-    plt.plot(range(1, 31), hist_acm['val_acc'], label='ACM (Ours)', color='black', linewidth=2, linestyle='--', marker='s')
+    plt.plot(range(1, 31), hist_acm['val_acc'], label='ACM (Ours)', color='black', linewidth=2, linestyle='--',
+             marker='s')
 
     plt.title('Validation Accuracy on FashionMNIST (40% Noisy Labels)', fontsize=16)
     plt.xlabel('Epochs', fontsize=12)
@@ -73,6 +79,7 @@ def main():
     plt.grid(True, linestyle=':', alpha=0.7)
     plt.savefig('fashionmnist.pdf', format='pdf', bbox_inches='tight', dpi=300)
     print("Saved fashionmnist.pdf")
+
 
 if __name__ == '__main__':
     main()

@@ -1,5 +1,6 @@
 import os
 import sys
+
 # Add project root to sys.path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
@@ -12,6 +13,7 @@ from torch_geometric.nn import GCNConv
 
 from acm.optimiser import ACM
 from experiments.utils import set_seed
+
 
 class GCN(torch.nn.Module):
     def __init__(self, num_features, num_classes):
@@ -27,6 +29,7 @@ class GCN(torch.nn.Module):
         x = F.dropout(x, p=0.5, training=self.training)
         x = self.conv2(x, edge_index)
         return F.log_softmax(x, dim=1)
+
 
 # Training Loop for Node Classification
 def train_gcn(optimizer_class, data, num_features, num_classes, epochs=200, **opt_kwargs):
@@ -55,9 +58,10 @@ def train_gcn(optimizer_class, data, num_features, num_classes, epochs=200, **op
             val_accuracies.append(acc * 100)
 
         if (epoch + 1) % 20 == 0:
-            print(f'Epoch: {epoch+1:03d}, Loss: {loss:.4f}, Val Acc: {val_accuracies[-1]:.2f}%')
+            print(f'Epoch: {epoch + 1:03d}, Loss: {loss:.4f}, Val Acc: {val_accuracies[-1]:.2f}%')
 
     return val_accuracies
+
 
 def main():
     set_seed(42)
@@ -69,8 +73,9 @@ def main():
 
     print("=== Training GCN ===\n")
     print("Training with Adam...")
-    cora_adam = train_gcn(torch.optim.Adam, cora_data, cora_dataset.num_node_features, cora_dataset.num_classes, lr=0.01)
-    
+    cora_adam = train_gcn(torch.optim.Adam, cora_data, cora_dataset.num_node_features, cora_dataset.num_classes,
+                          lr=0.01)
+
     print("\nTraining with ACM...")
     cora_acm = train_gcn(ACM, cora_data, cora_dataset.num_node_features, cora_dataset.num_classes, lr=0.1, kappa=2.0)
 
@@ -86,6 +91,7 @@ def main():
     plt.grid(True, linestyle=':', alpha=0.7)
     plt.savefig('cora.pdf', format='pdf', bbox_inches='tight', dpi=300)
     print("Saved cora.pdf")
+
 
 if __name__ == '__main__':
     main()

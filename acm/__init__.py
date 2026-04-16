@@ -11,4 +11,3 @@ diagonal Riemannian metric tensor.
 from .optimiser import ACM
 
 __all__ = ['ACM']
-

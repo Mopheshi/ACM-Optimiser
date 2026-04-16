@@ -1,17 +1,30 @@
+import copy
 import os
 import random
 import time
-import copy
-import numpy as np
 
+import matplotlib.pyplot as plt
+import numpy as np
+import seaborn as sns
 import torch
 from sklearn.metrics import classification_report, confusion_matrix
-import matplotlib.pyplot as plt
-import seaborn as sns
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
+
+# ==========================================
+# STRICT REPRODUCIBILITY FUNCTION
+# ==========================================
 def set_seed(seed=42):
+    """
+    Set random seeds for reproducibility.
+
+    This ensures identical random states across PyTorch, NumPy, and Python's
+    built-in hashing.
+
+    Args:
+        seed (int, optional): The random seed to use (default: 42).
+    """
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
@@ -19,6 +32,7 @@ def set_seed(seed=42):
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = False
     os.environ['PYTHONHASHSEED'] = str(seed)
+
 
 def train_and_evaluate(model, train_loader, val_loader, criterion, optimizer, scheduler=None, epochs=10, patience=3):
     best_val_acc = 0.0
@@ -87,7 +101,7 @@ def train_and_evaluate(model, train_loader, val_loader, criterion, optimizer, sc
         history['train_acc'].append(train_acc)
         history['val_acc'].append(val_acc)
 
-        print(f'Epoch {epoch+1:02d}: Train Loss: {train_loss:.4f}, Val Acc: {val_acc*100:.2f}%')
+        print(f'Epoch {epoch + 1:02d}: Train Loss: {train_loss:.4f}, Val Acc: {val_acc * 100:.2f}%')
 
         if val_acc > best_val_acc:
             best_val_acc = val_acc
@@ -105,6 +119,7 @@ def train_and_evaluate(model, train_loader, val_loader, criterion, optimizer, sc
 
     return best_val_acc, avg_epoch_time, peak_memory, history
 
+
 def train_model_v2(model, criterion, optimizer, train_loader, val_loader, scheduler=None, epochs=10):
     history = {'train_loss': [], 'val_loss': [], 'train_acc': [], 'val_acc': []}
     epoch_times = []
@@ -114,7 +129,7 @@ def train_model_v2(model, criterion, optimizer, train_loader, val_loader, schedu
         starter, ender = torch.cuda.Event(enable_timing=True), torch.cuda.Event(enable_timing=True)
 
     for epoch in range(epochs):
-        print(f'Epoch {epoch+1}/{epochs}')
+        print(f'Epoch {epoch + 1}/{epochs}')
         print('-' * 10)
 
         if torch.cuda.is_available():
@@ -171,6 +186,7 @@ def train_model_v2(model, criterion, optimizer, train_loader, val_loader, schedu
     print(f'Peak GPU Memory: {peak_mem:.2f} MB')
 
     return model, history
+
 
 def evaluate_and_plot(model, dataloader, history, class_names, model_name):
     model.eval()
